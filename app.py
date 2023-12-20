@@ -70,6 +70,18 @@ class Funcs():
         self.desconectar_bd()
         self.limpa_tela()
         self.select_lista()
+    def altera_cliente(self):
+        self.variaveis()
+        self.conecta_bd()
+        self.cursor.execute("""UPDATE clientes SET nome_cliente =?, telefone =?, cidade =? 
+            WHERE cod=? """, (self.nome, self.tel, self.cid, self.cod))
+        self.conn.commit()
+        self.desconectar_bd()
+        self.select_lista()
+        self.limpa_tela()
+
+
+
 
 class Application(Funcs):
     def __init__(self):
@@ -107,7 +119,7 @@ class Application(Funcs):
         self.bt_novo = Button(self.frame_1, text='Novo', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'),command=self.add_cliente)
         self.bt_novo.place(relx=0.6, rely=0.1, relwidth=0.1, relheight=0.15)
 
-        self.bt_alterar = Button(self.frame_1, text='Alterar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'))
+        self.bt_alterar = Button(self.frame_1, text='Alterar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'),command=self.altera_cliente)
         self.bt_alterar.place(relx=0.7, rely=0.1, relwidth=0.1, relheight=0.15)
 
         self.bt_apagar = Button(self.frame_1, text='Apagar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'),command=self.deleta_cliente)
