@@ -7,7 +7,7 @@ import sqlite3
 root = Tk()
 
 class Funcs():
-    def Limpa_tela(self):
+    def limpa_tela(self):
         self.cod_entry.delete(0,END)
         self.nome_entry.delete(0,END)
         self.tel_entry.delete(0,END)
@@ -16,7 +16,7 @@ class Funcs():
         self.conn = sqlite3.connect("CLientes.bd")
         self.cursor = self.conn.cursor(); print ("banco de dados criado")
     def desconectar_bd(self):
-        self.conn.close() ; print ("Descpnectando banco de dados")
+        self.conn.close() ; print ("Desconectando banco de dados")
     def montaTabelas(self):
         self.conecta_bd(); print("conectando ao banco de dados.")
         #criando tabela
@@ -30,15 +30,46 @@ class Funcs():
         """)
         self.conn.commit()
         self.desconectar_bd()
-    def add_cliente(self):
+    def variaveis(self):
         self.cod = self.cod_entry.get()
         self.nome = self.nome_entry.get()
         self.tel = self.tel_entry.get()
         self.cid = self.cid_entry.get()
+    def add_cliente(self):
+        self.variaveis()
         self.conecta_bd()
 
         self.cursor.execute(""" INSERT INTO clientes(nome_cliente, telefone, cidade)
-                            VALUES(?, ?, ?)""", )
+            VALUES(?, ?, ?)""", (self.nome, self.tel, self.cid))
+        self.conn.commit()
+        self.desconectar_bd()
+        self.select_lista()
+        self.limpa_tela()
+    def select_lista(self):
+        self.ListaCli.delete(*self.ListaCli.get_children())
+        self.conecta_bd()
+        lista = self.cursor.execute(""" SELECT cod, nome_cliente, telefone, cidade FROM clientes
+            ORDER BY nome_cliente ASC; """)
+        for i in lista:
+            self.ListaCli.insert("",END, values=i)
+        self.desconectar_bd()
+    def OnDoubleClick(self, event):
+        self.limpa_tela()
+        self.ListaCli.selection()
+        for n in self.ListaCli.selection():
+            col1, col2, col3, col4 = self.ListaCli.item(n, 'values')
+            self.cod_entry.insert(END, col1)
+            self.nome_entry.insert(END, col2)
+            self.tel_entry.insert(END, col3)
+            self.cid_entry.insert(END, col4)
+    def deleta_cliente(self):
+        self.variaveis()
+        self.conecta_bd()
+        self.cursor.execute("""DELETE FROM clientes WHERE cod = ?""", (self.cod,))
+        self.conn.commit()
+        self.desconectar_bd()
+        self.limpa_tela()
+        self.select_lista()
 
 class Application(Funcs):
     def __init__(self):
@@ -48,6 +79,7 @@ class Application(Funcs):
         self.criando_botoes()
         self.lis_frame2()
         self.montaTabelas()
+        self.select_lista()
         root.mainloop()
 
     def tela (self):
@@ -66,19 +98,19 @@ class Application(Funcs):
         self.frame_2.place(relx= 0.02, rely=0.5, relwidth=0.96, relheight=0.46)
 
     def criando_botoes(self):
-        self.bt_limpar = Button(self.frame_1, text='Limpar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'),command=self.Limpa_tela)
+        self.bt_limpar = Button(self.frame_1, text='Limpar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'),command=self.limpa_tela)
         self.bt_limpar.place(relx=0.2, rely=0.1, relwidth=0.1, relheight=0.15)
 
         self.bt_buscar = Button(self.frame_1, text='Buscar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'))
         self.bt_buscar.place(relx=0.3, rely=0.1, relwidth=0.1, relheight=0.15)
 
-        self.bt_novo = Button(self.frame_1, text='Novo', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'))
+        self.bt_novo = Button(self.frame_1, text='Novo', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'),command=self.add_cliente)
         self.bt_novo.place(relx=0.6, rely=0.1, relwidth=0.1, relheight=0.15)
 
         self.bt_alterar = Button(self.frame_1, text='Alterar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'))
         self.bt_alterar.place(relx=0.7, rely=0.1, relwidth=0.1, relheight=0.15)
 
-        self.bt_apagar = Button(self.frame_1, text='Apagar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'))
+        self.bt_apagar = Button(self.frame_1, text='Apagar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'),command=self.deleta_cliente)
         self.bt_apagar.place(relx=0.8, rely=0.1, relwidth=0.1, relheight=0.15)
 
             #Criando label cod
@@ -124,7 +156,7 @@ class Application(Funcs):
         self.scroolLista = Scrollbar(self.frame_2, orient='vertical')
         self.ListaCli.configure(yscroll=self.scroolLista.set)
         self.scroolLista.place(relx=0.96, rely=0.1, relwidth=0.04, relheight=0.85)
-
+        self.ListaCli.bind("<Double-1>",self.OnDoubleClick)
 
 
 
