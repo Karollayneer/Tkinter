@@ -79,7 +79,19 @@ class Funcs():
         self.desconectar_bd()
         self.select_lista()
         self.limpa_tela()
+    def Menus (self):
+        menubar = Menu(self.root)
+        self.root.config(menu=menubar)
+        filemenu = Menu(menubar)
+        filemenu2 = Menu(menubar)
 
+        def Quit(): self.root.destroy()
+
+        menubar.add_cascade(label="Opções", menu= filemenu)
+        menubar.add_cascade(label="Sobre", menu= filemenu2)
+
+        filemenu.add_command(label="Sair", command= Quit)
+        filemenu2.add_command(label="Limpar cliente", command=self.limpa_tela)
 
 
 
@@ -92,6 +104,7 @@ class Application(Funcs):
         self.lis_frame2()
         self.montaTabelas()
         self.select_lista()
+        self.Menus()
         root.mainloop()
 
     def tela (self):
