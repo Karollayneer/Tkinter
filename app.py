@@ -1,10 +1,33 @@
-
 from tkinter import *
 from tkinter import ttk
 import sqlite3
 
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.platypus import SimpleDocTemplate, Image
+import webbrowser
+
 
 root = Tk()
+
+class Relatorios():
+    def printCliente(self):
+        webbrowser.open("cliente.pdf")
+    def gerandoRelatClente(self):
+        self.c = canvas.Canvas("cliente.pdf")
+
+        self.codRel = self.cod_entry.get()
+        self.nomeRel = self.nome_entry.get()
+        self.telRel = self.tel_entry.get()
+        self.cidRel = self.cid_entry.get()
+       
+        self.c.setFont("Helvetica-Bold",24)
+        self.c.drawString(200, 790, 'Ficha do Cliente')
+        self.c.showPage()
+        self.c.save()
+        self.printCliente()
 
 class Funcs():
     def limpa_tela(self):
@@ -88,14 +111,16 @@ class Funcs():
         def Quit(): self.root.destroy()
 
         menubar.add_cascade(label="Opções", menu= filemenu)
-        menubar.add_cascade(label="Sobre", menu= filemenu2)
+        menubar.add_cascade(label="Relatorios", menu= filemenu2)
 
         filemenu.add_command(label="Sair", command= Quit)
-        filemenu2.add_command(label="Limpar cliente", command=self.limpa_tela)
+        filemenu.add_command(label="Limpar cliente", command=self.limpa_tela)
+
+        filemenu2.add_command(label="ficha do cliente", command=self.gerandoRelatClente)
 
 
 
-class Application(Funcs):
+class Application(Funcs, Relatorios):
     def __init__(self):
         self.root = root
         self.tela( )
@@ -105,6 +130,7 @@ class Application(Funcs):
         self.montaTabelas()
         self.select_lista()
         self.Menus()
+
         root.mainloop()
 
     def tela (self):
