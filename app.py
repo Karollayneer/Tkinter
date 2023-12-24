@@ -135,7 +135,7 @@ class Application(Funcs, Relatorios):
 
     def tela (self):
         self.root.title("Cadastro Cliente")
-        self.root.configure(background='#ede7d5')
+        self.root.configure(background='#34344e')
         self.root.geometry("788x588")
         self.root.resizable(True, True)
         self.root.maxsize(width=900, height=700)
