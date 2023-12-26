@@ -25,6 +25,23 @@ class Relatorios():
        
         self.c.setFont("Helvetica-Bold",24)
         self.c.drawString(200, 790, 'Ficha do Cliente')
+
+        self.c.setFont("Helvetica-Bold",19)
+        self.c.drawString(50,700, 'Codigo: ')
+        self.c.drawString(50,670, 'Nome: ' )
+        self.c.drawString(50,640, 'Telefone: ')
+        self.c.drawString(50,610, 'Cidade: ')
+
+        self.c.setFont("Helvetica",16)
+        self.c.drawString(150,700, self.codRel)
+        self.c.drawString(150,670, self.nomeRel)
+        self.c.drawString(150,640, self.telRel)
+        self.c.drawString(150,610, self.cidRel)
+
+        self.c.rect(20, 720, 550, 200, fill=False, stroke=True)
+
+        self.c.rect(20, 550, 550, 1, fill=False, stroke=True)
+
         self.c.showPage()
         self.c.save()
         self.printCliente()
@@ -72,10 +89,29 @@ class Funcs():
         self.ListaCli.delete(*self.ListaCli.get_children())
         self.conecta_bd()
         lista = self.cursor.execute(""" SELECT cod, nome_cliente, telefone, cidade FROM clientes
-            ORDER BY nome_cliente ASC; """)
+            ORDER BY cod DESC; """)
+
         for i in lista:
             self.ListaCli.insert("",END, values=i)
         self.desconectar_bd()
+    def busca_cliente(self):
+        self.conecta_bd()
+        self.ListaCli.delete(*self.ListaCli.get_children())
+        self.nome_entry.insert(END, '%')
+        nome = self.nome_entry.get()
+        self.cursor.execute(
+            """SELECT cod, nome_cliente, telefone, cidade FROM clientes
+            WHERE nome_cliente LIKE ? ORDER BY nome_cliente ASC""", ('%' + nome + '%',))
+
+        buscarnomeCli = self.cursor.fetchall()
+        for i in buscarnomeCli:
+            self.ListaCli.insert("", END, values=i)
+        self.limpa_tela()
+
+        self.desconectar_bd()
+
+
+
     def OnDoubleClick(self, event):
         self.limpa_tela()
         self.ListaCli.selection()
@@ -152,7 +188,7 @@ class Application(Funcs, Relatorios):
         self.bt_limpar = Button(self.frame_1, text='Limpar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'),command=self.limpa_tela)
         self.bt_limpar.place(relx=0.2, rely=0.1, relwidth=0.1, relheight=0.15)
 
-        self.bt_buscar = Button(self.frame_1, text='Buscar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'))
+        self.bt_buscar = Button(self.frame_1, text='Buscar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'), command=self.busca_cliente)
         self.bt_buscar.place(relx=0.3, rely=0.1, relwidth=0.1, relheight=0.15)
 
         self.bt_novo = Button(self.frame_1, text='Novo', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'),command=self.add_cliente)
