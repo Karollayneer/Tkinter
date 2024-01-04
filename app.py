@@ -101,7 +101,7 @@ class Funcs():
         nome = self.nome_entry.get()
         self.cursor.execute(
             """SELECT cod, nome_cliente, telefone, cidade FROM clientes
-            WHERE nome_cliente LIKE ? ORDER BY nome_cliente ASC""", ('%' + nome + '%',))
+            WHERE nome_cliente LIKE ? ORDER BY nome_cliente ASC""", ('%' + nome,))
 
         buscarnomeCli = self.cursor.fetchall()
         for i in buscarnomeCli:
@@ -109,8 +109,6 @@ class Funcs():
         self.limpa_tela()
 
         self.desconectar_bd()
-
-
 
     def OnDoubleClick(self, event):
         self.limpa_tela()
@@ -154,8 +152,6 @@ class Funcs():
 
         filemenu2.add_command(label="ficha do cliente", command=self.gerandoRelatClente)
 
-
-
 class Application(Funcs, Relatorios):
     def __init__(self):
         self.root = root
@@ -185,7 +181,13 @@ class Application(Funcs, Relatorios):
         self.frame_2.place(relx= 0.02, rely=0.5, relwidth=0.96, relheight=0.46)
 
     def criando_botoes(self):
-        self.bt_limpar = Button(self.frame_1, text='Limpar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'),command=self.limpa_tela)
+        self.canvas_bt = Canvas(self.frame_1, bd=0, bg= '#1e3743', highlightbackground = 'gray',
+            highlightthickness=3)
+        self.canvas_bt.place(relx=0.19, rely=0.08, relwidth=0.22, relheight=0.19)
+
+        self.bt_limpar = Button(self.frame_1, text='Limpar', bd=4, bg= '#107bd2', fg= 'white',
+                                  activebackground='#108ecb', activeforeground="white"
+                                 ,font=( 'verdana',8,'bold'),command=self.limpa_tela)
         self.bt_limpar.place(relx=0.2, rely=0.1, relwidth=0.1, relheight=0.15)
 
         self.bt_buscar = Button(self.frame_1, text='Buscar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'), command=self.busca_cliente)
