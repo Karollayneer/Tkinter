@@ -109,7 +109,6 @@ class Funcs():
         self.limpa_tela()
 
         self.desconectar_bd()
-
     def OnDoubleClick(self, event):
         self.limpa_tela()
         self.ListaCli.selection()
@@ -186,8 +185,8 @@ class Application(Funcs, Relatorios):
         self.canvas_bt.place(relx=0.19, rely=0.08, relwidth=0.22, relheight=0.19)
 
         self.bt_limpar = Button(self.frame_1, text='Limpar', bd=4, bg= '#107bd2', fg= 'white',
-                                  activebackground='#108ecb', activeforeground="white"
-                                 ,font=( 'verdana',8,'bold'),command=self.limpa_tela)
+                                activebackground='#108ecb', activeforeground="white"
+                                , font=( 'verdana',8,'bold'),command=self.limpa_tela)
         self.bt_limpar.place(relx=0.2, rely=0.1, relwidth=0.1, relheight=0.15)
 
         self.bt_buscar = Button(self.frame_1, text='Buscar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'), command=self.busca_cliente)
@@ -195,6 +194,8 @@ class Application(Funcs, Relatorios):
 
         self.bt_novo = Button(self.frame_1, text='Novo', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'),command=self.add_cliente)
         self.bt_novo.place(relx=0.6, rely=0.1, relwidth=0.1, relheight=0.15)
+
+        
 
         self.bt_alterar = Button(self.frame_1, text='Alterar', bd=4, bg= '#107bd2', fg= 'white', font=( 'verdana',8,'bold'),command=self.altera_cliente)
         self.bt_alterar.place(relx=0.7, rely=0.1, relwidth=0.1, relheight=0.15)
